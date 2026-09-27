@@ -15,6 +15,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from .access import NetworkAccess
+from .machine_access import JobReaders, job_metadata
 from .browser import BrowserSessions
 from .network import validate_public_url
 from .service import Service, send_email
@@ -33,6 +34,9 @@ def create_app(data_path=None):
     service = Service(db, browser)
     root = os.getenv('ROOT_PATH', '').rstrip('/')
     public = os.getenv('PUBLIC_URL', '')
+    job_readers = JobReaders.from_file(os.getenv('PRIVACY_BOT_JOB_READERS_FILE'))
+    if job_readers.readers and (urlsplit(public).scheme != 'https' or not urlsplit(public).hostname):
+        raise ValueError('Machine readers require a configured HTTPS PUBLIC_URL')
     access_mode = os.getenv('PRIVACY_BOT_ACCESS', 'token')
     if access_mode not in {'token', 'network'}:
         raise RuntimeError('PRIVACY_BOT_ACCESS must be token or network')
@@ -81,11 +85,24 @@ def create_app(data_path=None):
         path = request.url.path
         relative = path[len(root):] if root and path.startswith(root + '/') else path
         is_api = relative.startswith('/api/')
+        machine_reader = None
+        if request.headers.getlist('authorization'):
+            machine_reader = job_readers.authenticate(request.headers.getlist('authorization'))
+            if machine_reader is None:
+                return JSONResponse({'detail': 'Invalid machine credential'}, status_code=401,
+                                    headers={'Cache-Control': 'no-store'})
+            if request.method != 'GET' or relative != '/api/dashboard':
+                return JSONResponse({'detail': 'Machine scope denied'}, status_code=403,
+                                    headers={'Cache-Control': 'no-store'})
+            hosts = request.headers.getlist('host')
+            if not public or len(hosts) != 1 or hosts[0].lower() != urlsplit(public).netloc.lower():
+                return JSONResponse({'detail': 'Use the configured Privacy Bot address'}, status_code=400)
+            request.state.job_reader = machine_reader
         if network_access is not None and relative != '/healthz':
             hosts = request.headers.getlist('host')
             if len(hosts) != 1 or hosts[0].lower() != urlsplit(public).netloc.lower():
                 return JSONResponse({'detail': 'Use the configured Privacy Bot address'}, status_code=400)
-            if not network_access.permits(request):
+            if machine_reader is None and not network_access.permits(request):
                 return JSONResponse({'detail': 'Connect through your home network or Tailscale'}, status_code=403)
         if request.headers.get('content-length', '').isdigit() and int(request.headers['content-length']) > 12_000_000:
             return JSONResponse({'detail': 'Upload too large (maximum 10 MB)'}, status_code=413)
@@ -98,7 +115,7 @@ def create_app(data_path=None):
                 if origin and origin != expected.scheme + '://' + expected.netloc:
                     return JSONResponse({'detail': 'Cross-origin request refused'}, status_code=403)
             cookie = request.cookies.get('privacy_session', '')
-            authenticated = network_access is not None or sessions.get(hashlib.sha256(cookie.encode()).hexdigest(), 0) > time.time()
+            authenticated = machine_reader is not None or network_access is not None or sessions.get(hashlib.sha256(cookie.encode()).hexdigest(), 0) > time.time()
             if relative not in ('/api/login', '/api/session') and not authenticated:
                 return JSONResponse({'detail': 'Sign in to Privacy Bot'}, status_code=401)
         response = await call_next(request)
@@ -158,7 +175,9 @@ def create_app(data_path=None):
         return response
 
     @app.get('/api/dashboard')
-    async def dashboard():
+    async def dashboard(request: Request):
+        if getattr(request.state, 'job_reader', None) is not None:
+            return job_metadata(db)
         return {'profile': db.get('meta', 'profile', {'name': '', 'email': '', 'phone': '', 'addresses': [], 'aliases': [], 'country': 'GB'}),
                 'sources': db.all('sources'), 'findings': db.all('findings'), 'removals': db.all('removals'),
                 'alerts': db.all('alerts')[:500], 'credit': service.credit_summary(), 'runs': db.all('runs')[:200],

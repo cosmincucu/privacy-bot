@@ -47,6 +47,8 @@ The UI never claims protection from a source that has not been successfully chec
 
 See [research](docs/RESEARCH.md), [API contract](docs/CONTRACT.md),
 [browser controls](docs/BROWSER.md) and [deployment](docs/DEPLOYMENT.md).
+Assistants can use optional [named job-status readers](docs/MACHINE_READERS.md)
+without receiving browser privileges or personal findings.
 
 ## Checks
 

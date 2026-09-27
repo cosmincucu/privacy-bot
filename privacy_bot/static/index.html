@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Privacy Bot</title>
+<meta name="description" content="Privacy Bot — local exposure monitoring, assisted broker removal and UK credit watch.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<noscript>
+  <div class="noscript">
+    <h1>Privacy Bot needs JavaScript</h1>
+    <p>Everything here is read from your own backend at <code>api/</code>. Enable JavaScript to
+       see what has actually been checked. Nothing is monitored, sent or removed without you
+       starting it from this page.</p>
+  </div>
+</noscript>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<div class="app">
+  <aside class="rail" id="rail">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+          <path d="M12 4.6l6.1 2.5v5.2c0 3.8-2.5 6.5-6.1 7.6-3.6-1.1-6.1-3.8-6.1-7.6V7.1z"/>
+          <path d="M9.4 12.1l1.9 1.9 3.5-3.7"/>
+        </svg>
+      </span>
+      <span class="brand-text">
+        <span class="brand-name">Privacy Bot</span>
+        <span class="brand-tag">Your data, watched at home</span>
+      </span>
+    </div>
+
+    <nav class="nav" id="nav" aria-label="Privacy Bot sections">
+      <button class="nav-item" type="button" data-view="overview"><span class="ic" data-icon="overview"></span><span class="nav-label">Overview</span><span class="count" data-count="alerts" hidden></span></button>
+      <button class="nav-item" type="button" data-view="exposures"><span class="ic" data-icon="exposures"></span><span class="nav-label">Exposures</span><span class="count" data-count="exposures" hidden></span></button>
+      <button class="nav-item" type="button" data-view="removals"><span class="ic" data-icon="removals"></span><span class="nav-label">Removals</span><span class="count" data-count="removals" hidden></span></button>
+      <button class="nav-item" type="button" data-view="credit"><span class="ic" data-icon="credit"></span><span class="nav-label">Credit</span><span class="count" data-count="credit" hidden></span></button>
+      <button class="nav-item" type="button" data-view="sources"><span class="ic" data-icon="sources"></span><span class="nav-label">Sources</span><span class="count" data-count="sources" hidden></span></button>
+      <button class="nav-item" type="button" data-view="research"><span class="ic" data-icon="research"></span><span class="nav-label">Research</span></button>
+      <button class="nav-item" type="button" data-view="identity"><span class="ic" data-icon="identity"></span><span class="nav-label">Identity &amp; setup</span></button>
+    </nav>
+
+    <div class="rail-foot">
+      <p class="sched" id="sched-line" aria-live="polite">Schedule: unknown &mdash; no settings read from the backend yet.</p>
+      <p class="foot-note">Removal status follows your recorded evidence and re-checks.</p>
+      <button class="btn btn-ghost btn-sm theme-btn" type="button" id="btn-theme" aria-label="Switch colour theme">
+        <span class="ic" data-icon="theme"></span><span id="theme-label">Theme: auto</span>
+      </button>
+    </div>
+  </aside>
+
+  <div class="content">
+    <header class="topbar">
+      <div class="topbar-lead">
+        <h1 class="view-title" id="view-title">Overview</h1>
+        <p class="view-sub" id="view-sub">Loading your dashboard&hellip;</p>
+      </div>
+      <div class="topbar-actions">
+        <p class="stamp" id="stamp">Nothing read yet</p>
+        <button class="btn btn-quiet btn-sm" type="button" id="btn-refresh">Refresh</button>
+        <button class="btn btn-primary btn-sm" type="button" id="btn-scan"><span class="ic" data-icon="scan"></span>Run scan</button>
+        <button class="btn btn-quiet btn-sm" type="button" id="btn-signout" hidden>Sign out</button>
+      </div>
+    </header>
+
+    <main class="main" id="main" tabindex="-1">
+      <div class="boot" id="boot">
+        <div class="skeleton card"><div class="skeleton-line w-30"></div><div class="skeleton-line w-90"></div><div class="skeleton-line w-70"></div></div>
+        <div class="skeleton card"><div class="skeleton-line w-40"></div><div class="skeleton-line w-80"></div></div>
+        <p class="muted centre">Loading your dashboard&hellip;</p>
+      </div>
+
+      <section class="view" id="view-overview" aria-labelledby="view-title" hidden></section>
+      <section class="view" id="view-exposures" aria-labelledby="view-title" hidden></section>
+      <section class="view" id="view-removals" aria-labelledby="view-title" hidden></section>
+      <section class="view" id="view-credit" aria-labelledby="view-title" hidden></section>
+      <section class="view" id="view-sources" aria-labelledby="view-title" hidden></section>
+      <section class="view" id="view-research" aria-labelledby="view-title" hidden></section>
+      <section class="view" id="view-identity" aria-labelledby="view-title" hidden></section>
+    </main>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+<dialog id="login" class="modal modal--sm" aria-labelledby="login-title">
+  <form class="login-card" id="login-form">
+    <h2 class="modal-title" id="login-title">Privacy Bot is locked</h2>
+    <p class="muted">Enter your private access token to unlock Privacy Bot.</p>
+    <p class="field">
+      <label class="label" for="login-token">API token</label>
+      <input class="input" id="login-token" name="token" type="password" autocomplete="off" spellcheck="false" required>
+    </p>
+    <p class="field-error" id="login-error" role="alert" hidden></p>
+    <div class="modal-foot">
+      <button class="btn btn-primary" type="submit" id="login-submit">Sign in</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+{
+  "sources": [
+    {
+      "id": "experian",
+      "name": "Experian UK",
+      "kind": "credit",
+      "region": "GB",
+      "url": "https://www.experian.co.uk/consumer/login.html",
+      "privacy_url": "https://www.experian.co.uk/consumer/privacy.html",
+      "mode": "browser",
+      "detail": "Use your existing Experian account. A representative report and reviewed extraction recipe are needed for scheduled capture."
+    },
+    {
+      "id": "equifax",
+      "name": "Equifax via ClearScore",
+      "kind": "credit",
+      "region": "GB",
+      "url": "https://app.clearscore.com/login",
+      "privacy_url": "https://www.clearscore.com/privacy-policy",
+      "mode": "browser",
+      "detail": "Use your existing ClearScore account for the Equifax file. A reviewed extraction recipe is needed for scheduled capture."
+    },
+    {
+      "id": "transunion",
+      "name": "TransUnion via Credit Karma",
+      "kind": "credit",
+      "region": "GB",
+      "url": "https://www.creditkarma.co.uk/login",
+      "privacy_url": "https://www.creditkarma.co.uk/about/privacy",
+      "mode": "browser",
+      "detail": "Use your existing Credit Karma account for the TransUnion file. A reviewed extraction recipe is needed for scheduled capture."
+    },
+    {
+      "id": "192",
+      "name": "192.com",
+      "kind": "broker",
+      "region": "GB",
+      "url": "https://www.192.com/",
+      "privacy_url": "https://www.192.com/help/help-home/",
+      "mode": "discovery",
+      "detail": "Search for indexed listings using your name. Review each candidate before requesting removal. Hidden records need the provider’s own access process."
+    },
+    {
+      "id": "ukphonebook",
+      "name": "UKPhonebook",
+      "kind": "broker",
+      "region": "GB",
+      "url": "https://www.ukphonebook.com/",
+      "privacy_url": "https://www.ukphonebook.com/privacy-policy",
+      "mode": "discovery",
+      "detail": "Search for indexed listings using your name. Review each candidate before requesting removal. Hidden records need the provider’s own access process."
+    },
+    {
+      "id": "acxiom",
+      "name": "Acxiom UK marketing data",
+      "kind": "broker",
+      "region": "GB",
+      "url": "https://www.acxiom.co.uk/",
+      "privacy_url": "https://www.acxiom.co.uk/privacy/",
+      "mode": "manual",
+      "detail": "Marketing-data rights request; this is not a consumer credit report."
+    },
+    {
+      "id": "experian-marketing",
+      "name": "Experian marketing data",
+      "kind": "broker",
+      "region": "GB",
+      "url": "https://www.experian.co.uk/",
+      "privacy_url": "https://www.experian.co.uk/privacy/consumer-information-portal/",
+      "mode": "manual",
+      "detail": "Separate marketing-data request. Do not treat credit-report records as marketing opt-outs."
+    },
+    {
+      "id": "apollo",
+      "name": "Apollo professional profiles",
+      "kind": "broker",
+      "region": "GB/global",
+      "url": "https://www.apollo.io/",
+      "privacy_url": "https://www.apollo.io/privacy-policy",
+      "mode": "discovery",
+      "detail": "Search for indexed listings using your name. Review each candidate before requesting removal. Hidden records need the provider’s own access process."
+    },
+    {
+      "id": "rocketreach",
+      "name": "RocketReach professional profiles",
+      "kind": "broker",
+      "region": "GB/global",
+      "url": "https://rocketreach.co/",
+      "privacy_url": "https://rocketreach.co/privacy",
+      "mode": "discovery",
+      "detail": "Search for indexed listings using your name. Review each candidate before requesting removal. Hidden records need the provider’s own access process."
+    },
+    {
+      "id": "hibp",
+      "name": "Have I Been Pwned",
+      "kind": "breach",
+      "region": "global",
+      "url": "https://haveibeenpwned.com/",
+      "privacy_url": "https://haveibeenpwned.com/Privacy",
+      "mode": "hibp",
+      "detail": "Optional API key required. Queries send your email address to HIBP. Breach coverage is not a full dark-web scan."
+    },
+    {
+      "id": "hibp-stealer",
+      "name": "HIBP stealer-log exposure",
+      "kind": "darkweb",
+      "region": "global",
+      "url": "https://haveibeenpwned.com/",
+      "privacy_url": "https://haveibeenpwned.com/Privacy",
+      "mode": "hibp_stealer",
+      "detail": "Third-party metadata only; no onion access or raw leak downloads. Requires HIBP Pro and verified control of your email domain. Consumer mailbox domains may be ineligible."
+    }
+  ],
+  "research": [
+    {
+      "name": "PrivacyScrub",
+      "url": "https://github.com/bmcgarybot/privacyscrub",
+      "description": "Closest small self-hosted removal dashboard found; broker counts and effectiveness are author claims, not verified coverage.",
+      "license": "MIT"
+    },
+    {
+      "name": "data_takedown",
+      "url": "https://github.com/Jollyhrothgar/data_takedown",
+      "description": "Removal queue, encrypted identity and re-check workflow. Its optional Claude automation is not used here.",
+      "license": "Verify upstream before reuse"
+    },
+    {
+      "name": "Optout",
+      "url": "https://github.com/DrCaiola/optout",
+      "description": "Browser-local tracker and deletion-letter workflow; useful UI inspiration.",
+      "license": "CC BY-NC-SA; not permissive software reuse"
+    },
+    {
+      "name": "Big Ass Data Broker Opt-Out List",
+      "url": "https://github.com/yaelwrites/Big-Ass-Data-Broker-Opt-Out-List",
+      "description": "Human-maintained opt-out instructions, primarily US oriented. Reference only; list not copied.",
+      "license": "CC BY-NC-SA 4.0"
+    },
+    {
+      "name": "PersProtect open broker dataset",
+      "url": "https://github.com/Persprotect/data-broker-opt-out-list",
+      "description": "Structured US broker inventory with removal URLs; regional coverage must be assessed.",
+      "license": "CC BY 4.0"
+    },
+    {
+      "name": "SpiderFoot",
+      "url": "https://github.com/smicallef/spiderfoot",
+      "description": "Modular exposure discovery. Many providers need API keys; broad OSINT results need identity review.",
+      "license": "MIT"
+    },
+    {
+      "name": "AIL Framework",
+      "url": "https://github.com/ail-project/ail-framework",
+      "description": "Clear-web, Tor and I2P collection and leak analysis. Separate heavier service to consider for larger monitoring needs.",
+      "license": "AGPL-3.0"
+    },
+    {
+      "name": "Have I Been Pwned API",
+      "url": "https://haveibeenpwned.com/API/v3",
+      "description": "Documented breach lookup with explicit status codes and coverage limits. External optional service.",
+      "license": "Service terms / API subscription"
+    },
+    {
+      "name": "ICO credit guidance",
+      "url": "https://ico.org.uk/for-the-public/credit/",
+      "description": "Authoritative UK coverage and statutory-report access guidance.",
+      "license": "Reference"
+    }
+  ]
+}

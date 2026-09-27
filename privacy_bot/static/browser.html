@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Private browser · Privacy Bot</title>
+<meta name="description" content="Privacy Bot private browser — sign in, handle a login or CAPTCHA, and run a source extraction on this machine.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<noscript>
+  <div class="noscript">
+    <h1>The private browser needs JavaScript</h1>
+    <p>It is a live remote view of a browser running on your own machine. Go back to the dashboard and
+       enable JavaScript.</p>
+  </div>
+</noscript>
+
+<main class="browser-page">
+  <p><a href="./">← Back to Privacy Bot</a></p>
+  <h1 class="view-title">Private browser</h1>
+  <p class="soft muted lead-note">
+    Sign in, read the page, or finish anything a broker puts in front of a human. The browser profile
+    stays on this machine, so a login here does not pass through any third-party service. Nothing is
+    sent to anyone from this page except the page requests you make yourself.
+  </p>
+
+  <div class="browser-toolbar" role="group" aria-label="Session controls">
+    <label class="sr-only" for="source">Source to open</label>
+    <select class="input" id="source"></select>
+    <button class="btn btn-primary" type="button" id="open">Open session</button>
+    <button class="btn btn-quiet" type="button" id="capture" title="Run this source’s extraction and report what the page contains">Run extraction</button>
+    <button class="btn btn-quiet" type="button" id="close">Save &amp; close</button>
+    <label class="check" for="auto"><input type="checkbox" id="auto" checked><span><span class="strong">Refresh view</span> <span class="hint">every 5 s while open</span></span></label>
+  </div>
+
+  <div class="browser-toolbar" role="group" aria-label="Page navigation">
+    <label class="sr-only" for="url">Address</label>
+    <input class="input mono" id="url" placeholder="https://" spellcheck="false" autocomplete="off">
+    <button class="btn btn-quiet" type="button" id="go">Go</button>
+    <button class="btn btn-ghost" type="button" id="back" title="Sends the Alt+Left key to the page">← Back</button>
+    <button class="btn btn-ghost" type="button" id="fwd" title="Sends the Alt+Right key to the page">Forward →</button>
+    <button class="btn btn-ghost" type="button" id="refresh">Reload</button>
+  </div>
+
+  <div class="browser-toolbar" role="group" aria-label="Keyboard and mouse">
+    <label class="sr-only" for="typing">Text for the focused field</label>
+    <input class="input" id="typing" type="password" autocomplete="off" spellcheck="false"
+           placeholder="Text for the focused field (password box so a shoulder cannot read it)">
+    <button class="btn btn-quiet" type="button" id="type">Type text</button>
+    <button class="btn btn-ghost" type="button" data-key="Enter">Enter</button>
+    <button class="btn btn-ghost" type="button" data-key="Tab">Tab</button>
+    <button class="btn btn-ghost" type="button" data-key="Escape">Esc</button>
+    <button class="btn btn-ghost" type="button" data-key="Backspace">⌫</button>
+    <button class="btn btn-ghost" type="button" data-scroll="-650">Scroll up</button>
+    <button class="btn btn-ghost" type="button" data-scroll="650">Scroll down</button>
+    <button class="btn btn-ghost" type="button" id="clear-type">Clear box</button>
+  </div>
+
+  <p class="browser-warn">
+    Click the screen to focus a field, then use the text box — a click is sent at the same spot you see,
+    scaled to the real <span class="mono">1280×900</span> viewport. Login, OTP and CAPTCHA are yours to
+    enter here; Privacy Bot never automates them and never stores the answer. If a source has a
+    <span class="mono">needs_login</span> status, sign in here and run the extraction when the real page
+    is on screen. Closing the session keeps the profile on this machine.
+  </p>
+
+  <p class="field-error" id="error" role="alert" hidden></p>
+  <p class="browser-meta" id="meta" aria-live="polite">No session open.</p>
+
+  <div class="screen-wrap">
+    <p class="screen-hint" id="hint">Open a session to see the page. Nothing loads until you do.</p>
+    <img id="screen" alt="Private browser screen" hidden>
+  </div>
+
+  <section class="card" id="capture-card" hidden>
+    <div class="card-head"><h2>Extraction result</h2></div>
+    <div class="stack">
+      <p class="soft muted" id="capture-note"></p>
+      <pre class="code" id="capture-out"></pre>
+    </div>
+  </section>
+</main>
+
+<script src="browser.js"></script>
+</body>
+</html>
